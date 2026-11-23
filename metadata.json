@@ -1,0 +1,6 @@
+{
+  "name": "냉장고 요리사",
+  "description": "냉장고 속 재료 인식부터 부족한 재료 대체 레시피, 단계별 타이머와 요리 모드까지 안내하는 한국 가정식 맞춤 요리 도우미",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

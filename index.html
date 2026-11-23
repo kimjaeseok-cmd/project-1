@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>냉장고 요리사 — 우리 집 재료 맞춤 요리 도우미</title>
+    <meta
+      name="description"
+      content="냉장고 속 재료 인식부터 부족한 재료 대체 레시피, 단계별 타이머와 요리 모드까지 안내하는 한국 가정식 맞춤 요리 도우미"
+    />
+    <meta property="og:title" content="냉장고 요리사 — 우리 집 재료 맞춤 요리 도우미" />
+    <meta
+      property="og:description"
+      content="냉장고 속 재료 인식부터 부족한 재료 대체 레시피, 단계별 타이머와 요리 모드까지 안내하는 한국 가정식 맞춤 요리 도우미"
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+KR:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('fridge_chef_theme');
+          if (
+            saved === 'dark' ||
+            (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          ) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="bg-[#F8F8F6] text-zinc-900 dark:bg-[#121412] dark:text-zinc-100 antialiased selection:bg-emerald-600/20">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
