@@ -26,6 +26,7 @@ import type {
   RecognizedIngredientCandidate,
   TimeLimitOption,
 } from '../types/recipe';
+import { apiFetch } from '../utils/api';
 import { compressImageForUpload } from '../utils/audioAndImage';
 import { formatExpiryLabel, getDaysUntilExpiry } from '../utils/storage';
 import {
@@ -198,7 +199,7 @@ export function FridgeTab({
     setRecognizedCandidates([]);
 
     try {
-      const res = await fetch('/api/recognize-ingredients', {
+      const res = await apiFetch('/api/recognize-ingredients', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -304,7 +305,7 @@ export function FridgeTab({
 
     try {
       const priorityNames = urgentItems.map((u) => u.item.name);
-      const res = await fetch('/api/recommend-recipes', {
+      const res = await apiFetch('/api/recommend-recipes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

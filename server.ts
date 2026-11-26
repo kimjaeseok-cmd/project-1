@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import type { Request, Response } from 'express';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, ThinkingLevel, Type } from '@google/genai';
@@ -172,6 +173,17 @@ function sanitizeRecipe(raw: Record<string, unknown>, fallbackServings: number) 
 async function startServer() {
   const app = express();
   app.use(express.json({ limit: '12mb' }));
+
+  app.use('/api', (req: Request, res: Response, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    if (req.method === 'OPTIONS') {
+      res.status(204).end();
+      return;
+    }
+    next();
+  });
 
   // 1. 사진에서 식재료 인식
   app.post('/api/recognize-ingredients', async (req: Request, res: Response) => {
@@ -496,6 +508,39 @@ async function startServer() {
       res.json({ recipe: sanitizeRecipe(parsed, servings) });
     } catch (err) {
       handleGeminiError(res, err, '대체 레시피를 만드는 중 오류가 발생했습니다.');
+    }
+  });
+
+  // 5. 단일 index.html 파일 내려받기 (외부 업로드/배포용)
+  app.get('/api/download-html', async (req: Request, res: Response) => {
+    try {
+      const distHtmlPath = path.resolve(__dirname, 'dist', 'index.html');
+      if (!fs.existsSync(distHtmlPath)) {
+        const { build } = await import('vite');
+        await build();
+      }
+      if (!fs.existsSync(distHtmlPath)) {
+        res.status(500).json({ error: '단일 index.html 파일을 생성하지 못했습니다.' });
+        return;
+      }
+
+      let html = fs.readFileSync(distHtmlPath, 'utf-8');
+      const envAppUrl = process.env.APP_URL;
+      const backendOrigin =
+        envAppUrl && envAppUrl !== 'MY_APP_URL' && envAppUrl.startsWith('http')
+          ? envAppUrl.replace(/\/+$/, '')
+          : `${req.protocol}://${req.get('host')}`;
+
+      const injection = `<script>window.__FRIDGE_CHEF_API_URL__=${JSON.stringify(backendOrigin)};</script>`;
+      if (html.includes('</head>')) {
+        html = html.replace('</head>', `${injection}</head>`);
+      }
+
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.setHeader('Content-Disposition', 'attachment; filename="index.html"');
+      res.send(html);
+    } catch (err) {
+      handleGeminiError(res, err, 'index.html 파일을 준비하는 중 오류가 발생했습니다.');
     }
   });
 

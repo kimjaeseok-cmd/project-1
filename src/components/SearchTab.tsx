@@ -18,6 +18,7 @@ import type {
   ShoppingListItem,
   SubstitutionMode,
 } from '../types/recipe';
+import { apiFetch } from '../utils/api';
 import { ErrorRetryCard, MenuAnalysisSkeleton } from './SkeletonCards';
 
 interface SearchTabProps {
@@ -71,7 +72,7 @@ export function SearchTab({
     setBuildError(null);
 
     try {
-      const res = await fetch('/api/analyze-menu', {
+      const res = await apiFetch('/api/analyze-menu', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -120,7 +121,7 @@ export function SearchTab({
 
       const missingNames = analysis.missingIngredients.map((m) => m.name);
 
-      const res = await fetch('/api/build-substituted-recipe', {
+      const res = await apiFetch('/api/build-substituted-recipe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

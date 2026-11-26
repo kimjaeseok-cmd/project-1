@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { BookHeart, Moon, Refrigerator, Search, Sun } from 'lucide-react';
+import { BookHeart, Download, Moon, Refrigerator, Search, Sun } from 'lucide-react';
 import { findIngredientEmoji } from './data/koreanIngredients';
 import type {
   ActiveTab,
@@ -315,6 +315,21 @@ export default function App() {
           />
         )}
       </main>
+
+      {/* Quiet Footer with Single-File index.html Download */}
+      {typeof window !== 'undefined' && window.location.protocol !== 'file:' && (
+        <footer className="max-w-6xl w-full mx-auto px-4 pb-24 md:pb-8 pt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-zinc-400 dark:text-zinc-500 border-t border-zinc-200/70 dark:border-zinc-800/70">
+          <span>냉장고 요리사 · 한국 가정식 맞춤 요리 도우미</span>
+          <a
+            href="/api/download-html"
+            download="index.html"
+            className="inline-flex items-center gap-1.5 min-h-[36px] px-2.5 rounded-lg hover:bg-zinc-200/60 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-medium transition-colors"
+          >
+            <Download className="w-3.5 h-3.5" />
+            업로드용 index.html 내려받기
+          </a>
+        </footer>
+      )}
 
       {/* Toast Notification */}
       {toastMessage && (
